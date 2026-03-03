@@ -17,13 +17,20 @@ const userschema = new mongoose.Schema({
     },
     bio:{
         type : String,
-        default: "Hey Here , I Am Using ShareSphere plateform"
+        default: "Hey Here , I Am Using Zindigo plateform"
     },
     profileimage:{
         type : String,
         default: "https://ik.imagekit.io/me5kodcnuw/user.webp?updatedAt=1771048910212"
-    }
-
+    },
+    followers:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"users"
+    }],
+    following:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"users"
+    }]
 })
 
 const usermodel = mongoose.model("user",userschema)
