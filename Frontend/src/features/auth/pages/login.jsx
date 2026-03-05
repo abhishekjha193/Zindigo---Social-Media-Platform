@@ -1,58 +1,51 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "../styles/auth.scss";
-import axios from "axios";
+import "../style/login.scss";
+import { useAuth } from "../hooks/useAuth";
 
-function Login() {
-  const [username, setusername] = useState("");
-  const [password, setpassword] = useState("");
+export const Login = () => {
+  const { user, loading, handleLogin } = useAuth();
+
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  function handlesubmit(e) {
+  const handlesubmit = async (e) => {
     e.preventDefault();
 
-    axios
-      .post(
-        "http://localhost:3000/api/auth/login",
-        { email, password }, 
-        { withCredentials: true },
-      )
-      .then((res) => {
-        console.log(res.data);
-      });
-  }
+    await handleLogin(username, password);
+
+    console.log("");
+  };
 
   return (
-    <main className="auth-container">
-      <div className="auth-card">
-        <h2>Login</h2>
+    <div className="login-container">
+      <div className="login-card">
+        <img src="/logo.png" alt="logo" className="logo" />
+
+        <h2>Welcome Back</h2>
 
         <form onSubmit={handlesubmit}>
           <input
-            onInput={(e) => {
-              setEmail(e.target.value);
-            }}
             type="email"
             placeholder="Email"
-            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
+
           <input
-            onInput={(e) => {
-              setpassword(e.target.value);
-            }}
             type="password"
             placeholder="Password"
-            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
+
           <button type="submit">Login</button>
         </form>
 
-        <p>
-          Don't have an account? <Link to="/register">Register</Link>
+        <p className="signup">
+          Don't have an account? <Link to="/register">Signup</Link>
         </p>
       </div>
-    </main>
+    </div>
   );
-}
-
-export default Login;
+};

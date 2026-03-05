@@ -1,105 +1,121 @@
-const usermodel = require("../models/user.model");
+const userModel = require('../models/user.model')
 const bcrypt = require("bcryptjs")
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken")
 
 
-async function registercontroller(req, res){
- const { email, username, password, bio, profileimage } = req.body;
+async function registerController(req, res) {
+    const { email, username, password, bio, profileImage } = req.body
 
-  //to find grab username and email
-  const isuserExistbyEmail = await usermodel.findOne({
-    $or: [{ username }, { email }],
-  });
+    const isUserAlreadyExists = await userModel.findOne({
+        $or: [
+            { username },
+            { email }
+        ]
+    })
 
-  //to print based on conditions
-  if (isuserExistbyEmail) {
-    return res.status(409).json({
-      message:
-        "user already exists" +
-        (isuserExistbyEmail.email === email
-          ? " , This email is already taken try another"
-          : " , This username is already taken try another"),
-    });
-  }
+    if (isUserAlreadyExists) {
+        return res.status(409)
+            .json({
+                message: "User already exists " + (isUserAlreadyExists.email == email ? "Email already exists" : "Username already exists")
+            })
+    }
 
-  const hash = await bcrypt.hash(password,10);
+    const hash = await bcrypt.hash(password, 10)
 
-  const user = await usermodel.create({
-    username,
-    email,
-    bio,
-    profileimage,
-    password: hash,
-  });
+    const user = await userModel.create({
+        username,
+        email,
+        bio,
+        profileImage,
+        password: hash
+    })
 
-  //jab user ho aur unique ho tab token create karo
-  const token = jwt.sign(
-    {
-      id: user._id,
-      username:user.username
-    },
-    process.env.JWT_SECRET,
-    { expiresIn: "365d" },
-  );
+    const token = jwt.sign(
+        {
+            id: user._id,
+            username: user.username
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "1d" }
+    )
 
-  res.cookie("token", token);
+    res.cookie("token", token)
 
-  res.status(201).json({
-    message: "User Registered Successfully",
-    user: {
-      email: user.email,
-      username: user.username,
-      bio: user.bio,
-      profileimage: user.profileimage,
-    },
-  });
+    res.status(201).json({
+        message: "User Registered successfully",
+        user: {
+            email: user.email,
+            username: user.username,
+            bio: user.bio,
+            profileImage: user.profileImage
+        }
+    })
+
+
 }
 
-async function logincontroller (req, res) {
- const { username, email, password } = req.body;
+async function loginController(req, res) {
+    const { username, email, password } = req.body
 
-  //check username or email
-  const user = await usermodel.findOne({
-    $or: [{ username: username }, { email: email }],
-  });
+    /**
+     * username
+     * password
+     * 
+     * email
+     * password
+     */
 
-  if (!user) {
-    return res.status(404).json({
-      message: "user not found",
-    });
-  }
+    /**
+     * { username:undefined,email:test@test.com,password:test } = req.body
+     */
 
-  const passwordvalid = await bcrypt.compare(password,user.password);
+    const user = await userModel.findOne({
+        $or: [
+            {
+                username: username
+            },
+            {
+                email: email
+            }
+        ]
+    })
 
-  if (!passwordvalid) {
-    return res.status(401).json({
-      message: "password is invalid",
-    });
-  }
-
-  const token = jwt.sign(
-    {
-      id: user._id,
-      username: user.username
-    },
-    process.env.JWT_SECRET,
-    { expiresIn: "365d" },
-  );
-
-  res.cookie("token",token)
-
-  res.status(200).json({
-    message:"User LoggedIn Sucessfully",
-    user:{
-      username:user.username,
-      email:user.email,
-      bio:user.bio,
-      profileimage: user.profileimage
+    if (!user) {
+        return res.status(404).json({
+            message: "User not found"
+        })
     }
-  })
+
+    const isPasswordValid = await bcrypt.compare(password, user.password)
+
+    if (!isPasswordValid) {
+        return res.status(401).json({
+            message: "password invalid"
+        })
+    }
+
+    const token = jwt.sign(
+        { id: user._id, username: user.username },
+        process.env.JWT_SECRET,
+        { expiresIn: "1d" }
+    )
+
+    res.cookie("token", token)
+
+
+    res.status(200)
+        .json({
+            message: "User loggedIn successfully.",
+            user: {
+                username: user.username,
+                email: user.email,
+                bio: user.bio,
+                profileImage: user.profileImage
+            }
+        })
 }
 
 module.exports = {
-    registercontroller,
-    logincontroller
+    registerController,
+    loginController
 }

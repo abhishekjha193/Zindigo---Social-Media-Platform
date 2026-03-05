@@ -1,45 +1,28 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-const userschema = new mongoose.Schema({
-    username:{
-        type : String,
-        unique : [true , "username already exists" ],
-        required:[true, "username is required" ]
+const userSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        unique: [ true, "User name already exists" ],
+        required: [ true, "User name is required" ]
     },
-    email:{
-        type : String,
-        unique : [true , "email already exists" ],
-        required:[true, "email is required" ]
+    email: {
+        type: String,
+        unique: [ true, "Email already exists" ],
+        required: [ true, "Email is required" ]
     },
-    password:{
-        type : String,
-        required:[true, "password is required" ]
+    password: {
+        type: String,
+        required: [ true, "Password is required" ]
     },
-    bio:{
-        type : String,
-        default: "Hey Here , I Am Using Zindigo plateform"
+    bio: String,
+    profileImage: {
+        type: String,
+        default: "https://ik.imagekit.io/hnoglyswo0/avatar-gender-neutral-silhouette-vector-600nw-2470054311.webp"
     },
-    profileimage:{
-        type : String,
-        default: "https://ik.imagekit.io/me5kodcnuw/user.webp?updatedAt=1771048910212"
-    },
-    followers:[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:"users"
-    }],
-    following:[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:"users"
-    }]
 })
 
-const usermodel = mongoose.model("user",userschema)
 
-module.exports = usermodel
+const userModel = mongoose.model("users", userSchema)
 
-
-
-
-
-
-
+module.exports = userModel

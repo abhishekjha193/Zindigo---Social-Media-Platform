@@ -1,27 +1,29 @@
-const jwt = require ('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 
-async function identifyuser(req, res, next) {
-  const token = req.cookies.token;
+async function identifyUser(req, res, next) {
+    const token = req.cookies.token
 
-  if (!token) {
-    return res.status(401).json({
-      message: "Unauthorized access , Token not Provided",
-    });
-  }
+    if (!token) {
+        return res.status(401).json({
+            message: "Token not provided, Unauthorized access"
+        })
+    }
 
-  let decoded = null;
+    let decoded = null
 
-  try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (err) {
-    return res.status(401).json({
-      message: "user not authorized",
-    });
-  }
+    try {
+        decoded = jwt.verify(token, process.env.JWT_SECRET)
+    } catch (err) {
+        return res.status(401).json({
+            message: "user not authorized"
+        })
+    }
 
-  req.user = decoded
+    req.user = decoded
 
-  next()
+    next()
 }
 
-module.exports = identifyuser
+/* req.user */
+
+module.exports = identifyUser

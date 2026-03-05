@@ -1,17 +1,18 @@
 const express = require("express")
 const postRouter = express.Router()
-const postcontroller = require("../controllers/post.controller")
+const postController = require("../controllers/post.controller")
 const multer = require("multer")
-const upload = multer({storage:multer.memoryStorage()})
-const identifyuser = require("../middlewares/auth.middleware")
+const upload = multer({ storage: multer.memoryStorage() })
+const identifyUser = require("../middlewares/auth.middleware")
 
+postRouter.post("/", upload.single("chacha"), identifyUser, postController.createPostController)
 
-postRouter.post("/", upload.single("image"), identifyuser , postcontroller.createpost)
+postRouter.get("/", identifyUser, postController.getPostController)
 
-postRouter.get("/", identifyuser , postcontroller.getpost)
+postRouter.get("/feed", identifyUser, postController.getPostController)   
 
-postRouter.get("/details/:postid", identifyuser , postcontroller.postdetail)
+postRouter.get("/details/:postId", identifyUser, postController.getPostDetailsController)
 
-postRouter.post("/like/:postid", identifyuser , postcontroller.likepost)
+postRouter.post("/like/:postId", identifyUser, postController.likePostController)
 
 module.exports = postRouter

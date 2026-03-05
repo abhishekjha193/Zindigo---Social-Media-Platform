@@ -1,15 +1,19 @@
-const express = require("express");
-const usermodel = require("../models/user.model");
-const authcontroller = require("../controllers/auth.controller")
-const crypto = require("crypto");
-const jwt = require("jsonwebtoken");
+const express = require('express')
+const authController = require("../controllers/auth.controller")
 
-const authrouter = express.Router();
 
-//user register
-authrouter.post("/register",authcontroller.registercontroller );
+const authRouter = express.Router()
 
-//user login
-authrouter.post("/login",authcontroller.logincontroller );
+/**
+ * POST /api/auth/register
+ */
+authRouter.post('/register', authController.registerController)
 
-module.exports = authrouter;
+
+/**
+ * POST /api/auth/login
+ */
+authRouter.post("/login", authController.loginController)
+
+
+module.exports = authRouter

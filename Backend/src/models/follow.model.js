@@ -1,21 +1,28 @@
 const mongoose = require("mongoose");
 
-const followschema = new mongoose.Schema(
-  {
+
+const followSchema = new mongoose.Schema({
     follower: {
-      type: String,
+        type: String,
     },
     followee: {
-      type: String,
+        type: String,
     },
-  },
-  {
-    timestamps: true,
-  },
-);
+    status: {
+        type: String,
+        default: "pending",
+        enum: {
+            values: [ "pending", "accepted", "rejected" ],
+            message: "status can only be pending, accepted or rejected"
+        }
+    }
+}, {
+    timestamps: true
+})
 
-followschema.index({follower:1, followee:1},{unique:true})
+followSchema.index({ follower: 1, followee: 1 }, { unique: true })
 
-const followModel = mongoose.model("follows", followschema);
 
-module.exports = followModel;
+const followModel = mongoose.model("follows", followSchema)
+
+module.exports = followModel

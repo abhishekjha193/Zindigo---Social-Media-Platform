@@ -1,68 +1,58 @@
-import  React, { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "../styles/auth.scss";
-import axios from "axios";
+import "../style/login.scss";
 
-function Register() {
-  const [username, setusername] = useState("");
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
+export const Register = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  async function handlesubmit(e) {
+  const handleRegister = (e) => {
     e.preventDefault();
-    try {
-      const res = await axios.post("http://localhost:3000/api/auth/register", {
-        username,
-        email,
-        password,
-      },{
-        withCredentials:true
-      });
 
-      console.log(res.data);
-    } catch (error) {
-      console.log(error.response?.data || error.message);
-    }
-  }
+    console.log({
+      username,
+      email,
+      password,
+    });
+  };
 
   return (
-    <main className="auth-container">
-      <div className="auth-card">
-        <h2>Register</h2>
+    <div className="login-container">
+      <div className="login-card">
+        <img src="/logo.png" alt="logo" className="logo" />
 
-        <form onSubmit={handlesubmit}>
+        <h2>Create Account</h2>
+
+        <form onSubmit={handleRegister}>
           <input
             type="text"
-            placeholder="Full Name"
-            required
+            placeholder="Username"
             value={username}
-            onChange={(e) => setusername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
           />
 
           <input
             type="email"
             placeholder="Email"
-            required
             value={email}
-            onChange={(e) => setemail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           <input
             type="password"
             placeholder="Password"
-            required
             value={password}
-            onChange={(e) => setpassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
           />
+
           <button type="submit">Register</button>
         </form>
 
-        <p>
+        <p className="signup">
           Already have an account? <Link to="/login">Login</Link>
         </p>
       </div>
-    </main>
+    </div>
   );
-}
-
-export default Register;
+};
