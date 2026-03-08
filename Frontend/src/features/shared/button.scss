@@ -1,0 +1,24 @@
+.button{
+  border:none;
+  outline:none;
+  padding-inline:1rem;
+  padding-block:0.5rem;
+  border-radius:1rem;
+  cursor:pointer;
+  transition:all 0.25s ease;
+
+  &.primary-button{
+    background:linear-gradient(135deg,#8A2BE2,#1E90FF);
+    color:white;
+    box-shadow:0 0 10px rgba(138,43,226,0.4);
+  }
+
+  &:hover{
+    transform:translateY(-2px);
+    box-shadow:0 0 14px rgba(30,144,255,0.5);
+  }
+
+  &:active{
+    transform:scale(0.9);
+  }
+}

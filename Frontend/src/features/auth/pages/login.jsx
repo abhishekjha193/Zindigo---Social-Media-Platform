@@ -1,51 +1,58 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import "../style/login.scss";
+import "../style/form.scss";
+import { Link } from "react-router";
 import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "react-router";
 
-export const Login = () => {
+const Login = () => {
   const { user, loading, handleLogin } = useAuth();
 
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handlesubmit = async (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     await handleLogin(username, password);
 
-    console.log("");
+    navigate("/");
   };
 
+  if (loading) {
+    return (
+      <main>
+        <h1>Loading.....</h1>
+      </main>
+    );
+  }
+
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <img src="/logo.png" alt="logo" className="logo" />
-
-        <h2>Welcome Back</h2>
-
-        <form onSubmit={handlesubmit}>
+    <main>
+      <div className="form-container">
+        <h1>Login</h1>
+        <form onSubmit={handleSubmit}>
           <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            placeholder="Enter username"
+            onChange={(e) => setUsername(e.target.value)}
           />
 
           <input
             type="password"
-            placeholder="Password"
-            value={password}
+            placeholder="Enter password"
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button type="submit">Login</button>
+          <button className="button primary-button">Login</button>
         </form>
-
-        <p className="signup">
-          Don't have an account? <Link to="/register">Signup</Link>
+        <p>
+          Don't have an account ? <Link to={"/register"}>Create One.</Link>
         </p>
       </div>
-    </div>
+    </main>
   );
 };
+
+export default Login;

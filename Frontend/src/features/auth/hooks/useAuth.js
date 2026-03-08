@@ -1,29 +1,42 @@
 import { useContext } from "react";
 import { AuthContext } from "../auth.context";
-import {login , register , getme} from "../services/auth.api"
+import { login, register, getMe } from "../services/auth.api";
+import { logout } from "../services/auth.api";
 
-export const useAuth = () =>{
+export const useAuth = () => {
+  const context = useContext(AuthContext);
 
-    const context = useContext(AuthContext)
+  const { user, setUser, loading, setLoading } = context;
 
-    const {user,setuser,loading,setloading} = context
+  const handleLogin = async (username, password) => {
+    setLoading(true);
 
-    const handlelogin = async (username,password)=>{
+    const response = await login(username, password);
 
-     setloading(true)
-     
-     const response = await login (username , password)
-     setuser(response.user)
-    }
+    setUser(response.user);
 
-    const handleregister = async (username,email,password)=>{
-     setloading(true)
-     const response = await register (username ,email, password)
-     setuser(response.user)
-     setloading(false)
-    }
+    setLoading(false);
+  };
 
-    return(
-        user,loading,handlelogin,handleregister
-    )
+  const handleRegister = async (username, email, password) => {
+    setLoading(true);
+    const response = await register(username, email, password);
+    setUser(response.user);
+
+    setLoading(false);
+  };
+
+const handleLogout = async () => {
+  await logout()
+  setUser(null)
+  window.location.href="/login"
 }
+
+  return {
+    user,
+    loading,
+    handleLogin,
+    handleRegister,
+    handleLogout 
+  };
+};

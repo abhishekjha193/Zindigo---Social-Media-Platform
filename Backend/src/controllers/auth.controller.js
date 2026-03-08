@@ -57,18 +57,6 @@ async function registerController(req, res) {
 async function loginController(req, res) {
     const { username, email, password } = req.body
 
-    /**
-     * username
-     * password
-     * 
-     * email
-     * password
-     */
-
-    /**
-     * { username:undefined,email:test@test.com,password:test } = req.body
-     */
-
     const user = await userModel.findOne({
         $or: [
             {
@@ -78,7 +66,7 @@ async function loginController(req, res) {
                 email: email
             }
         ]
-    })
+    }).select("+password")
 
     if (!user) {
         return res.status(404).json({
@@ -115,7 +103,31 @@ async function loginController(req, res) {
         })
 }
 
+async function getMeController(req, res) {
+    const userId = req.user.id
+
+    const user = await userModel.findById(userId)
+
+    res.status(200).json({
+        user: {
+            username: user.username,
+            email: user.email,
+            bio: user.bio,
+            profileImage: user.profileImage
+        }
+    })
+}
+
+const logoutController = (req, res) => {
+  res.clearCookie("token");
+  return res.status(200).json({
+    message: "User logged out successfully"
+  });
+};
+
 module.exports = {
-    registerController,
-    loginController
+  registerController,
+  loginController,
+  getMeController,
+  logoutController
 }
