@@ -242,10 +242,8 @@ Zindigo uses a **neon dark theme**:
 ---
 
 # 📸 Screenshots
-
-![alt text](image.png)
-![alt text](image-1.png)
-
+<img width="1766" height="888" alt="image" src="https://github.com/user-attachments/assets/f26316da-7368-4ea4-9480-c0e5684018f3" />
+<img width="1896" height="902" alt="image" src="https://github.com/user-attachments/assets/07d76d9c-8b17-4bd0-aaca-416a877c79bb" />
 ---
 
 # 📌 Future Improvements
